@@ -10,18 +10,6 @@ import { getProviders, signIn } from "next-auth/react";
 import HeaderLink from "../components/HeaderLink";
 
 const Home = ({ providers }) => {
-  const cloneProviders = {
-    ...providers,
-    facebook: {
-      callbackUrl: "http://localhost:3000/api/auth/callback/google",
-      id: "facebook",
-      name: "Facebook",
-      signinUrl: "http://localhost:3000/api/auth/signin/google",
-      type: "oauth",
-    },
-  };
-  console.log(cloneProviders);
-  console.log(providers);
   return (
     <div className="px-7">
       <header className=" max-w-screen-xl mx-auto py-4">
