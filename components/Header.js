@@ -72,7 +72,7 @@ const Header = () => {
             >
               <span className="absolute left-0.5 select-none">🌜</span>
               <motion.div
-                className="w-5 h-5 bg-white rounded-full z-40"
+                className="w-5 h-5 bg-white rounded-full z-10"
                 layout
                 transition={spring}
               />
