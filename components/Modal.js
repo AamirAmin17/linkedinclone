@@ -51,7 +51,6 @@ const dropIn = {
 //   };
 
 const Modal = ({ handleClose, type }) => {
-  console.log(type);
   const { data } = useSession();
 
   return (
@@ -60,21 +59,20 @@ const Modal = ({ handleClose, type }) => {
         {type === "dropIn" && (
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            className="rounded-xl flex flex-col justify-center bg-white dark:bg-[#1D2226] w-full md:-mt-80 max-w-lg mx-6"
+            className='rounded-xl flex flex-col justify-center bg-white dark:bg-[#1D2226] w-full md:-mt-24 max-w-lg mx-6'
             variants={dropIn}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <header className="flex items-center justify-between border-b border-gray-300 dark:border-white/75 px-4 py-2.5">
-              <h4 className="text-xl">Create a post</h4>
+            initial='hidden'
+            animate='visible'
+            exit='exit'>
+            <header className='flex items-center justify-between border-b border-gray-300 dark:border-white/75 px-4 py-2.5'>
+              <h4 className='text-xl'>Create a post</h4>
               <IconButton onClick={handleClose}>
-                <CloseRounded className="h-7 w-7 dark:text-white/75" />
+                <CloseRounded className='h-7 w-7 dark:text-white/75' />
               </IconButton>
             </header>
 
-            <main className="p-4 space-x-2">
-              <div className="flex items-center space-x-2">
+            <main className='p-4 space-x-2'>
+              <div className='flex items-center space-x-2'>
                 <Avatar src={data?.user?.image} />
                 <h6>{data?.user?.name}</h6>
               </div>
