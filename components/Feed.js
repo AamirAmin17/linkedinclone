@@ -5,7 +5,6 @@ import { getPostServerSide } from "../atoms/getPostAtom";
 import { useRecoilValue } from "recoil";
 const Feed = () => {
   const fetchPostsFromRecoil = useRecoilValue(getPostServerSide);
-  console.log("fetchPostsFromRecoil: ", fetchPostsFromRecoil);
 
   //short syntax of the same above function but still im using long because to understand clearly :D
   //   const fetcher = (...args) => fetch(...args).then((res) => res.json());
@@ -28,10 +27,10 @@ const Feed = () => {
 
   console.log(data);
   return (
-    <div className="space-y-6 pb-24 max-w-lg">
+    <div className='space-y-6 pb-24 max-w-lg'>
       {/**Input */}
       <Input />
-      {data?.map((data) => (
+      {fetchPostsFromRecoil?.map((data) => (
         <div>{data.input}</div>
       ))}
       {/**Posts */}
