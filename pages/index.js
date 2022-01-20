@@ -5,16 +5,23 @@ import { useRouter } from "next/router";
 
 import Header from "../components/Header";
 import Main from "../components/Main";
-export default function Home() {
+import { connectToDatabase } from "../utill/mongodb";
+import { getPostServerSide } from "../atoms/getPostAtom";
+import { useRecoilState } from "recoil";
+
+export default function Home({ posts }) {
+  const [getRecoilPosts, setGetRecoilPosts] = useRecoilState(getPostServerSide);
+
+  setGetRecoilPosts(posts);
   const router = useRouter();
   // const { status } = useSession({
   //   required: true,
   //   onUnauthenticated() {
   //     //The user is not authenticated, handle it here.
-  //     router.push("/home");
+  //     router.push("/home");S
   //   },
   // });
-  // console.log("isAuthenticated?", status);
+  //
   return (
     <div className="bg-[#F3F2EF] dark:bg-black dark:text-white h-screen overflow-y-scroll md:space-y-6">
       <Head>
@@ -40,9 +47,28 @@ export async function getServerSideProps(context) {
     };
   }
 
+  //Get post on SSR
+  const { db } = await connectToDatabase();
+  const posts = await db
+    .collection("posts")
+    .find()
+    .sort({ timestamp: -1 })
+    .toArray();
+
+  // Get Google News API
+
   return {
     props: {
       session,
+      posts: posts.map((post) => ({
+        _id: post._id.toString(),
+        input: post.input,
+        photoUrl: post.photoUrl,
+        username: post.username,
+        email: post.email,
+        userImg: post.userImg,
+        createdAt: post.createdAt,
+      })),
     },
   };
 }
