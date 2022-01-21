@@ -1,12 +1,14 @@
+import { PhotoSizeSelectActual } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import useSWR, { mutate, trigger } from "swr";
 import { modalState } from "../atoms/modalAtom";
-
+import FileBase64 from "react-file-base64";
 const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
-
+  const [userInfo, setUserInfo] = useState();
+  console.log("userInfo: ", userInfo);
   const [state, setState] = useState({
     value: "",
     rows: 2,
@@ -24,37 +26,30 @@ const Form = () => {
     return responseData;
   };
 
+  //   const handleImage = (event) => {
+  //     setUserInfo({ ...userInfo, file: event.target.files[0] });
+  //   };
+
   const { data: getData, error } = useSWR("/api/posts", fetcher);
+
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const { data } = useSession();
   const uploadPost = async (e) => {
     e.preventDefault();
 
-    mutate(
-      "/api/posts",
-      [
-        ...getData,
-        {
-          input: state.value,
-          photoUrl,
-          username: data?.user?.name,
-          email: data?.user?.email,
-          userImg: data?.user?.image,
-          createdAt: new Date().toString(),
-        },
-      ],
-      false
-    );
+    const postObject = {
+      input: state.value,
+      photoUrl: userInfo.image || "",
+      username: data?.user?.name,
+      email: data?.user?.email,
+      userImg: data?.user?.image,
+      createdAt: new Date().toString(),
+    };
+
+    await mutate("/api/posts", [...getData, postObject], false);
     const response = await fetch("/api/posts", {
       method: "POST",
-      body: JSON.stringify({
-        input: state.value,
-        photoUrl,
-        username: data?.user?.name,
-        email: data?.user?.email,
-        userImg: data?.user?.image,
-        createdAt: new Date().toString(),
-      }),
+      body: JSON.stringify(postObject),
       headers: {
         "Content-Type": "application/json",
       },
@@ -105,13 +100,29 @@ const Form = () => {
         />
       </div>
       <div className="flex items-center justify-between">
-        <input
-          type="text"
-          placeholder="Add a photo URL (optional)"
-          className="bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75"
-          value={photoUrl}
-          onChange={(e) => setPhotoUrl(e.target.value)}
+        <FileBase64
+          multiple={false}
+          onDone={({ base64 }) => setUserInfo({ ...userInfo, image: base64 })}
         />
+        {/* <input
+          type="file"
+          className="bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75"
+          onChange={handleImage}
+          hidden
+          name="upload_file"
+          id="actual-btn"
+        /> */}
+        {/* <button className="inputButton group" for="actual-btn">
+          <PhotoSizeSelectActual className="text-blue-400" />
+          <h4 className="opacity-80 group-hover:opacity-100">Photo</h4>
+        </button> */}
+        {/* <label for="actual-btn">
+          <div className="inputButton group">
+            <PhotoSizeSelectActual className="text-blue-400" />
+            <h4 className="opacity-80 group-hover:opacity-100">Add a photo</h4>
+          </div>
+        </label> */}
+
         <button
           className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
           disabled={!state.value.trim() && !photoUrl.trim()}
