@@ -5,9 +5,10 @@ import { useRecoilState } from "recoil";
 import useSWR, { mutate, trigger } from "swr";
 import { modalState } from "../atoms/modalAtom";
 import FileBase64 from "react-file-base64";
+import Resizer from "react-image-file-resizer";
 const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
-  const [userInfo, setUserInfo] = useState();
+  const [userInfo, setUserInfo] = useState([]);
   console.log("userInfo: ", userInfo);
   const [state, setState] = useState({
     value: "",
@@ -26,10 +27,25 @@ const Form = () => {
     return responseData;
   };
 
-  //   const handleImage = (event) => {
-  //     setUserInfo({ ...userInfo, file: event.target.files[0] });
-  //   };
-
+  const handleImage = (event) => {
+    setUserInfo({ ...userInfo, file: event.target.files[0] });
+  };
+  //compress image file on runtime (WEBP).
+  const resizeFile = (file) =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(
+        file,
+        800,
+        600,
+        "WEBP",
+        80,
+        0,
+        (uri) => {
+          resolve(uri);
+        },
+        "base64"
+      );
+    });
   const { data: getData, error } = useSWR("/api/posts", fetcher);
 
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
@@ -37,14 +53,17 @@ const Form = () => {
   const uploadPost = async (e) => {
     e.preventDefault();
 
+    const image = await resizeFile(userInfo?.file);
     const postObject = {
       input: state.value,
-      photoUrl: userInfo.image || "",
+      photoUrl: image,
       username: data?.user?.name,
       email: data?.user?.email,
       userImg: data?.user?.image,
       createdAt: new Date().toString(),
     };
+
+    console.log("Final object", postObject);
 
     await mutate("/api/posts", [...getData, postObject], false);
     const response = await fetch("/api/posts", {
@@ -89,29 +108,28 @@ const Form = () => {
   };
 
   return (
-    <form className="flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3">
+    <form className='flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3'>
       <div>
         <textarea
-          placeholder="What do you want to talk about?"
+          placeholder='What do you want to talk about?'
           className={`bg-transparent focus:outline-none dark:placeholder-white/75 hideScrollbar resize-none max-h-48 w-full h-auto overflow-auto`}
           value={state.value}
           onChange={handleChange}
           rows={state.rows}
         />
       </div>
-      <div className="flex items-center justify-between">
-        <FileBase64
+      <div className='flex items-center justify-between'>
+        {/* <FileBase64
           multiple={false}
           onDone={({ base64 }) => setUserInfo({ ...userInfo, image: base64 })}
-        />
-        {/* <input
-          type="file"
-          className="bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75"
-          onChange={handleImage}
-          hidden
-          name="upload_file"
-          id="actual-btn"
         /> */}
+        <input
+          type='file'
+          className='bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75'
+          onChange={handleImage}
+          name='upload_file'
+          id='actual-btn'
+        />
         {/* <button className="inputButton group" for="actual-btn">
           <PhotoSizeSelectActual className="text-blue-400" />
           <h4 className="opacity-80 group-hover:opacity-100">Photo</h4>
@@ -124,11 +142,10 @@ const Form = () => {
         </label> */}
 
         <button
-          className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
+          className='font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1'
           disabled={!state.value.trim() && !photoUrl.trim()}
-          type="submit"
-          onClick={uploadPost}
-        >
+          type='submit'
+          onClick={uploadPost}>
           Post
         </button>
       </div>
