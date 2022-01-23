@@ -2,6 +2,8 @@ import { connectToDatabase } from "../../../utill/mongodb";
 import { Timestamp } from "mongodb";
 import multer from "multer";
 
+export const config = { api: { bodyParser: { sizeLimit: "4mb" } } }; // Set desired value here } } }
+
 export default async function handler(req, res) {
   const { method, body } = req;
 
