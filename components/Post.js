@@ -6,7 +6,6 @@ import { useRecoilState } from "recoil";
 import { modalState } from "../atoms/modalAtom";
 
 const Post = ({ post, modalPost }) => {
-  console.log("post: ", post);
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
 
