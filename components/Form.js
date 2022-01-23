@@ -37,10 +37,10 @@ const Form = () => {
     new Promise((resolve) => {
       Resizer.imageFileResizer(
         file,
-        1200,
-        630,
+        800,
+        600,
         "WEBP",
-        85,
+        80,
         0,
         (uri) => {
           resolve(uri);
@@ -135,7 +135,7 @@ const Form = () => {
           <PhotoSizeSelectActual className="text-blue-400" />
           <h4 className="opacity-80 group-hover:opacity-100">Photo</h4>
         </button> */}
-        <label for='actual-btn'>
+        <label htmlFor='actual-btn'>
           <div className='inputButton group'>
             <PhotoSizeSelectActual className='text-blue-400' />
             <h4 className='opacity-80 group-hover:opacity-100'>Add a photo</h4>
