@@ -10,13 +10,38 @@ import axios from "axios";
 const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [userInfo, setUserInfo] = useState([]);
-  console.log("userInfo: ", userInfo);
+  const [optimzeImage, setOptimzeImage] = useState();
+  let optimzeImageVariable;
+
   const [state, setState] = useState({
     value: "",
     rows: 2,
     minRows: 2,
     maxRows: 10,
   });
+
+  useEffect(async () => {
+    if (userInfo.file) {
+      const resizeFile = (file) =>
+        new Promise((resolve) => {
+          Resizer.imageFileResizer(
+            file,
+            800,
+            600,
+            "WEBP",
+            80,
+            0,
+            (uri) => {
+              resolve(uri);
+            },
+            "base64"
+          );
+        });
+      const image = await resizeFile(userInfo?.file);
+      setOptimzeImage(image);
+    }
+  }, [userInfo.file]);
+
   const fetcher = async (...args) => {
     const response = await fetch(...args, {
       method: "GET",
@@ -29,25 +54,10 @@ const Form = () => {
   };
 
   const handleImage = (event) => {
-    console.log("event: ", event);
     setUserInfo({ ...userInfo, file: event.target.files[0] });
   };
   //compress image file on runtime (WEBP).
-  const resizeFile = (file) =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        800,
-        600,
-        "WEBP",
-        80,
-        0,
-        (uri) => {
-          resolve(uri);
-        },
-        "base64"
-      );
-    });
+
   const { data: getData, error } = useSWR("/api/posts", fetcher);
 
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
@@ -55,30 +65,28 @@ const Form = () => {
   const uploadPost = async (e) => {
     e.preventDefault();
 
-    const image = await resizeFile(userInfo?.file);
+    // const image = await resizeFile(userInfo?.file);
     const postObject = {
       input: state.value,
-      photoUrl: image,
+      photoUrl: optimzeImage,
       username: data?.user?.name,
       email: data?.user?.email,
       userImg: data?.user?.image,
       createdAt: new Date().toString(),
     };
 
-    console.log("Final object", postObject);
-
     await mutate("/api/posts", [...getData, postObject], false);
     const response = await axios.post("/api/posts", postObject, {
       onUploadProgress: (ProgressEvent) => {
-        console.log(
-          "Progress uploaded",
-          Math.round((ProgressEvent.loaded / ProgressEvent.total) * 100)
+        const progress = Math.round(
+          (ProgressEvent.loaded / ProgressEvent.total) * 100
         );
+        console.log("progress: ", progress);
       },
     });
     // const responseData = await response.json();
     mutate("/api/posts");
-    console.log("responseData: ", response);
+
     setModalOpen(false);
   };
 
@@ -128,7 +136,6 @@ const Form = () => {
           onChange={handleImage}
           name='upload_file'
           id='actual-btn'
-          onProgress={(e) => console.log("checking progress", e)}
           hidden
         />
         {/* <button className="inputButton group" for="actual-btn">
