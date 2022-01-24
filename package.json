@@ -26,7 +26,8 @@
     "react-image-file-resizer": "^0.4.7",
     "recoil": "^0.5.2",
     "sass": "^1.48.0",
-    "swr": "^1.1.2"
+    "swr": "^1.1.2",
+    "timeago-react": "^3.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.2",

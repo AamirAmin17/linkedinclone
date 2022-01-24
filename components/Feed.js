@@ -1,12 +1,13 @@
-import React from "react";
-import useSWR from "swr";
+import React, { useEffect } from "react";
+import useSWR, { mutate } from "swr";
 import Input from "./Input";
 import { getPostServerSide } from "../atoms/getPostAtom";
 import { useRecoilValue } from "recoil";
 import Post from "./Post";
+import { handlePostState } from "../atoms/postAtom";
 const Feed = () => {
   const fetchPostsFromRecoil = useRecoilValue(getPostServerSide);
-
+  const handlePost = useRecoilValue(handlePostState);
   //short syntax of the same above function but still im using long because to understand clearly :D
   //   const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
@@ -21,14 +22,16 @@ const Feed = () => {
     const responseData = await response.json();
     return responseData;
   };
-
+  useEffect(() => {
+    mutate("/api/posts");
+  }, [handlePost]);
   const { data, error } = useSWR("/api/posts", fetcher);
 
   //   if (error) return "An error has occurred.";
   //   if (!data) return "Loading...";
 
   return (
-    <div className='space-y-6 pb-24 max-w-lg'>
+    <div className="space-y-6 pb-24 max-w-lg">
       {/**Input */}
       <Input />
       {data

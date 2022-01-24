@@ -8,15 +8,6 @@ export default async function handler(req, res) {
   const { method, body } = req;
 
   const { db } = await connectToDatabase();
-  // const storage = multer.diskStorage({
-  //   destination: function (req, file, cb) {
-  //     cb(null, "C:/Users/AamirMuhammadAmin/linkedinclone/public/images");
-  //   },
-  //   filename: function (req, file, cb) {
-  //     cb(null, file.originalname + "- " + Date.now());
-  //   },
-  // });
-  // const upload = multer({ dest: storage });
 
   if (method === "GET") {
     try {

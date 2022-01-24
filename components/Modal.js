@@ -88,7 +88,7 @@ const Modal = ({ handleClose, type }) => {
 
         {type === "gifYouUp" && (
           <motion.div
-            className="modal rounded-l-lg rounded-r-lg flex flex-col md:flex-row bg-[#1D2226] md:w-full md:max-w-6xl mx-3 md:mx-6"
+            className="modal rounded-l-lg rounded-r-lg flex mt-12 flex-col md:flex-row bg-[#1D2226] md:w-full md:max-w-6xl mx-3 md:mx-6"
             onClick={(e) => e.stopPropagation()}
             variants={gifYouUp}
             initial="hidden"
@@ -104,9 +104,6 @@ const Modal = ({ handleClose, type }) => {
             <div className="w-full md:w-3/5 bg-white dark:bg-[#1D2226] rounded-r-lg ">
               <Post post={post} modalPost />
             </div>
-            {/* <div className="w-full bg-white">
-              <h1>Hello</h1>
-            </div> */}
           </motion.div>
         )}
       </Backdrop>

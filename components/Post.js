@@ -1,23 +1,45 @@
-import { CloseRounded, MoreHorizRounded } from "@mui/icons-material";
+import {
+  CloseRounded,
+  CommentOutlined,
+  MoreHorizRounded,
+  ThumbUpOffAltOutlined,
+  ThumbUpOffAltRounded,
+  DeleteRounded,
+  ReplyRounded,
+} from "@mui/icons-material";
 import { Avatar, IconButton } from "@mui/material";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import { modalState, modalTypeState } from "../atoms/modalAtom";
-import { getPostState } from "../atoms/postAtom";
+import { getPostState, handlePostState } from "../atoms/postAtom";
+import TimeagoReact from "timeago-react";
+import TimeAgo from "timeago-react";
+import useSWR, { mutate } from "swr";
 
 const Post = ({ post, modalPost }) => {
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
   const [modalType, setModalType] = useRecoilState(modalTypeState);
   const [postState, setPostState] = useRecoilState(getPostState);
-
+  const [handlePost, setHandlePost] = useRecoilState(handlePostState);
+  const [liked, setLiked] = useState(false);
+  const { data } = useSession();
   const truncate = (string, characterLength) => {
     return string.length > characterLength
       ? string.substr(0, characterLength - 1) + "...see more"
       : string;
   };
+  const deletePost = async () => {
+    const response = await fetch(`/api/posts/${post._id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "applicaton/json" },
+    });
 
+    setHandlePost(!handlePost);
+    setModalOpen(false);
+  };
   return (
     <div
       className={`bg-white dark:bg-[#1D2226] ${
@@ -32,6 +54,10 @@ const Post = ({ post, modalPost }) => {
           </h6>
           <p className="text-sm dark:text-white/75 opacity-90">{post.email}</p>
           {/**Timeago stamp */}
+          <TimeAgo
+            datetime={post.createdAt}
+            className="text-sm dark:text-white/75 opacity-80"
+          />
         </div>
 
         {modalPost ? (
@@ -79,6 +105,41 @@ const Post = ({ post, modalPost }) => {
           }}
         />
       )}
+      <div className="flex justify-evenly items-center dark:border-t border-gray-600/80 mx-2.5 pt-2 text-black/60 dark:text-white/75">
+        {modalPost ? (
+          <button className="postButton">
+            <CommentOutlined />
+            <h4>Comment</h4>
+          </button>
+        ) : (
+          <button
+            className={`postButton ${liked && "text-blue-500"}`}
+            onClick={() => setLiked(!liked)}
+          >
+            {liked ? (
+              <ThumbUpOffAltRounded className="-scale-x-100" />
+            ) : (
+              <ThumbUpOffAltOutlined className="-scale-x-100" />
+            )}
+            <h4>Like</h4>
+          </button>
+        )}
+
+        {data?.user?.email === post?.email ? (
+          <button
+            className="postButton hover:text-red-400 transition ease-out"
+            onClick={deletePost}
+          >
+            <DeleteRounded />
+            <h4>Delete a post</h4>
+          </button>
+        ) : (
+          <button className="postButton">
+            <ReplyRounded className="-scale-x-100" />
+            <h4>Share</h4>
+          </button>
+        )}
+      </div>
     </div>
   );
 };
