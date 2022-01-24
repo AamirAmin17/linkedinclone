@@ -17,13 +17,15 @@ import { getPostState, handlePostState } from "../atoms/postAtom";
 import TimeagoReact from "timeago-react";
 import TimeAgo from "timeago-react";
 import useSWR, { mutate } from "swr";
-
+import { CircularProgress } from "@mui/material";
 const Post = ({ post, modalPost }) => {
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
   const [modalType, setModalType] = useRecoilState(modalTypeState);
   const [postState, setPostState] = useRecoilState(getPostState);
   const [handlePost, setHandlePost] = useRecoilState(handlePostState);
+  const [spinner, setSpinner] = useState(false);
+  console.log("spinner: ", spinner);
   const [liked, setLiked] = useState(false);
   const { data } = useSession();
   const truncate = (string, characterLength) => {
@@ -32,6 +34,7 @@ const Post = ({ post, modalPost }) => {
       : string;
   };
   const deletePost = async () => {
+    setSpinner((prev) => !prev);
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "applicaton/json" },
@@ -39,6 +42,7 @@ const Post = ({ post, modalPost }) => {
 
     setHandlePost(!handlePost);
     setModalOpen(false);
+    setSpinner((prev) => !prev);
   };
   return (
     <div
@@ -130,8 +134,11 @@ const Post = ({ post, modalPost }) => {
             className="postButton hover:text-red-400 transition ease-out"
             onClick={deletePost}
           >
-            <DeleteRounded />
-            <h4>Delete a post</h4>
+            <div className="flex gap-5">
+              {spinner && <CircularProgress />}
+              <DeleteRounded />
+              <h4>Delete a post</h4>
+            </div>
           </button>
         ) : (
           <button className="postButton">
