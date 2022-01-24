@@ -1,10 +1,10 @@
 import { atom } from "recoil";
 
 export const modalState = atom({
-  key: "modalState",
+  key: "modalStateKey",
   default: false,
 });
 export const modalTypeState = atom({
-  key: "modalTypeState",
+  key: "modalTypeStateKey",
   default: "dropIn",
 });

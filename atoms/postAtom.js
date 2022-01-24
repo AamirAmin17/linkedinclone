@@ -1,14 +1,14 @@
 import { atom } from "recoil";
 
 export const handlePostState = atom({
-  key: "handlePostState",
+  key: "handlePostStateKey",
   default: false,
 });
 export const getPostState = atom({
-  key: "getPostState",
+  key: "getPostStateKey",
   default: {},
 });
 export const useSSRPostState = atom({
-  key: "useSSRPostState",
+  key: "useSSRPostStateKey",
   default: true,
 });
