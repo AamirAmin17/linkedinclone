@@ -3,9 +3,11 @@ import { Avatar, IconButton } from "@mui/material";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import React from "react";
+import { useRecoilValue } from "recoil";
 import Backdrop from "./Backdrop";
 import Form from "./Form";
-
+import Post from "./Post";
+import { getPostState } from "../atoms/postAtom";
 const dropIn = {
   hidden: {
     y: "-100vh",
@@ -27,32 +29,32 @@ const dropIn = {
   },
 };
 
-// const gifYouUp = {
-//     hidden: {
-//       opacity: 0,
-//       scale: 0,
-//     },
-//     visible: {
-//       opacity: 1,
-//       scale: 1,
-//       transition: {
-//         duration: 0.2,
-//         ease: "easeIn",
-//       },
-//     },
-//     exit: {
-//       opacity: 0,
-//       scale: 0,
-//       transition: {
-//         duration: 0.15,
-//         ease: "easeOut",
-//       },
-//     },
-//   };
+const gifYouUp = {
+  hidden: {
+    opacity: 0,
+    scale: 0,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      duration: 0.2,
+      ease: "easeIn",
+    },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0,
+    transition: {
+      duration: 0.15,
+      ease: "easeOut",
+    },
+  },
+};
 
 const Modal = ({ handleClose, type }) => {
   const { data } = useSession();
-
+  const post = useRecoilValue(getPostState);
   return (
     <div>
       <Backdrop onClick={handleClose}>
@@ -81,6 +83,30 @@ const Modal = ({ handleClose, type }) => {
             </main>
             {/**textarea, input, postButton */}
             <Form />
+          </motion.div>
+        )}
+
+        {type === "gifYouUp" && (
+          <motion.div
+            className="modal rounded-l-lg rounded-r-lg flex flex-col md:flex-row bg-[#1D2226] md:w-full md:max-w-6xl mx-3 md:mx-6"
+            onClick={(e) => e.stopPropagation()}
+            variants={gifYouUp}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.img
+              alt=""
+              onDoubleClick={handleClose}
+              src={post.photoUrl}
+              className="object-contain max-h-[50vh] md:max-h-[80vh] w-full md:max-w-md lg:max-w-xl xl:max-w-3xl rounded-l-lg"
+            />
+            <div className="w-full md:w-3/5 bg-white dark:bg-[#1D2226] rounded-r-lg ">
+              <Post post={post} modalPost />
+            </div>
+            {/* <div className="w-full bg-white">
+              <h1>Hello</h1>
+            </div> */}
           </motion.div>
         )}
       </Backdrop>

@@ -10,6 +10,7 @@ import axios from "axios";
 const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [userInfo, setUserInfo] = useState([]);
+
   const [optimzeImage, setOptimzeImage] = useState();
   let optimzeImageVariable;
 
@@ -119,41 +120,47 @@ const Form = () => {
   };
 
   return (
-    <form className='flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3'>
+    <form className="flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3">
       <div>
         <textarea
-          placeholder='What do you want to talk about?'
+          placeholder="What do you want to talk about?"
           className={`bg-transparent focus:outline-none dark:placeholder-white/75 hideScrollbar resize-none max-h-48 w-full h-auto overflow-auto`}
           value={state.value}
           onChange={handleChange}
           rows={state.rows}
         />
       </div>
-      <div className='flex items-center justify-between'>
+      <div className="flex items-center justify-between space-x-4">
         <input
-          type='file'
-          className='bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75'
+          type="file"
+          className="bg-transparent focus:outline-none truncate w-full max-w-xs md:max-w-sm dark:placeholder-white/75"
           onChange={handleImage}
-          name='upload_file'
-          id='actual-btn'
+          name="upload_file"
+          id="actual-btn"
           hidden
         />
         {/* <button className="inputButton group" for="actual-btn">
           <PhotoSizeSelectActual className="text-blue-400" />
           <h4 className="opacity-80 group-hover:opacity-100">Photo</h4>
         </button> */}
-        <label htmlFor='actual-btn'>
-          <div className='inputButton group'>
-            <PhotoSizeSelectActual className='text-blue-400' />
-            <h4 className='opacity-80 group-hover:opacity-100'>Add a photo</h4>
+        <label htmlFor="actual-btn">
+          <div className="inputButton group">
+            <PhotoSizeSelectActual className="text-blue-400" />
+            <h4 className="opacity-80 group-hover:opacity-100 whitespace-nowrap">
+              Add a photo
+            </h4>
           </div>
         </label>
+        <span className="text-blue-300 underline break-all">
+          {userInfo?.file?.name}
+        </span>
 
         <button
-          className='font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1'
+          className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
           disabled={!state.value.trim() && !photoUrl.trim()}
-          type='submit'
-          onClick={uploadPost}>
+          type="submit"
+          onClick={uploadPost}
+        >
           Post
         </button>
       </div>
