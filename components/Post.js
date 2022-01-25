@@ -25,7 +25,7 @@ const Post = ({ post, modalPost }) => {
   const [postState, setPostState] = useRecoilState(getPostState);
   const [handlePost, setHandlePost] = useRecoilState(handlePostState);
   const [spinner, setSpinner] = useState(false);
-  console.log("spinner: ", spinner);
+
   const [liked, setLiked] = useState(false);
   const { data } = useSession();
   const truncate = (string, characterLength) => {
@@ -100,7 +100,6 @@ const Post = ({ post, modalPost }) => {
         <img
           src={post.photoUrl}
           className="w-full cursor-pointer"
-          layout="fill"
           alt="new"
           onClick={() => {
             setModalOpen(true);
@@ -134,7 +133,7 @@ const Post = ({ post, modalPost }) => {
             className="postButton hover:text-red-400 transition ease-out"
             onClick={deletePost}
           >
-            <div className="flex gap-5">
+            <div className="flex gap-2 items-center">
               {spinner && <CircularProgress />}
               <DeleteRounded />
               <h4>Delete a post</h4>

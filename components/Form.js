@@ -7,12 +7,13 @@ import { modalState } from "../atoms/modalAtom";
 import FileBase64 from "react-file-base64";
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
+import { CircularProgress } from "@mui/material";
 const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [userInfo, setUserInfo] = useState([]);
+  const [spinner, setSpinner] = useState(false);
 
   const [optimzeImage, setOptimzeImage] = useState();
-  let optimzeImageVariable;
 
   const [state, setState] = useState({
     value: "",
@@ -65,7 +66,7 @@ const Form = () => {
   const { data } = useSession();
   const uploadPost = async (e) => {
     e.preventDefault();
-
+    setSpinner((prev) => !prev);
     // const image = await resizeFile(userInfo?.file);
     const postObject = {
       input: state.value,
@@ -89,6 +90,7 @@ const Form = () => {
     mutate("/api/posts");
 
     setModalOpen(false);
+    setSpinner((prev) => !prev);
   };
 
   const handleChange = (event) => {
@@ -154,15 +156,17 @@ const Form = () => {
         <span className="text-blue-300 underline break-all">
           {userInfo?.file?.name}
         </span>
-
-        <button
-          className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
-          disabled={!state.value.trim() && !photoUrl.trim()}
-          type="submit"
-          onClick={uploadPost}
-        >
-          Post
-        </button>
+        <div className="flex items-center gap-x-2">
+          {spinner && <CircularProgress />}
+          <button
+            className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
+            disabled={!state.value.trim() && !photoUrl.trim()}
+            type="submit"
+            onClick={uploadPost}
+          >
+            Post
+          </button>
+        </div>
       </div>
     </form>
   );
