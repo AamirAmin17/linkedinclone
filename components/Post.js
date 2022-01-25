@@ -66,12 +66,12 @@ const Post = ({ post, modalPost }) => {
         </div>
 
         {modalPost ? (
-          <IconButton className="ml-auto" onClick={() => setModalOpen(false)}>
+          <IconButton className="!ml-auto" onClick={() => setModalOpen(false)}>
             <CloseRounded className="dark:text-white/75 h-7 w-7" />
           </IconButton>
         ) : (
-          <IconButton className="ml-auto">
-            <MoreHorizRounded className="dark:text-white/75 h-7 w-7" />
+          <IconButton className="!ml-auto">
+            <MoreHorizRounded className="!dark:text-white/75 !h-7 !w-7" />
           </IconButton>
         )}
       </div>
