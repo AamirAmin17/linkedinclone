@@ -23,6 +23,7 @@ const Widgets = () => {
               url={article.url}
               title={article.title}
               publishedAt={article.publishedAt}
+              key={article.url}
             />
           ))}
         </articles>
