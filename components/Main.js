@@ -5,6 +5,7 @@ import { modalState, modalTypeState } from "../atoms/modalAtom";
 import Feed from "./Feed";
 import Modal from "./Modal";
 import Sidebar from "./Sidebar";
+import Widgets from "./Widgets";
 
 const Main = () => {
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
@@ -13,13 +14,15 @@ const Main = () => {
   console.log("modal type", modalType);
   // const [modalType] = useRecoilValue();
   return (
-    <main className="flex justify-center gap-x- px-4 sm:px-12">
+    <main className="flex justify-center px-4 sm:px-12">
       <div className="flex flex-col md:flex-row gap-5">
         {/**Sidebar */}
         <Sidebar />
 
         {/**Feed */}
         <Feed />
+
+        <Widgets />
         <AnimatePresence initial={false} exitBeforeEnter={true}>
           {modalOpen && (
             <Modal handleClose={() => setModalOpen(false)} type={modalType} />

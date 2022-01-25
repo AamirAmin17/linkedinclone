@@ -9,7 +9,7 @@ const Sidebar = () => {
 
   return (
     <>
-      <aside className="space-y-2 min-w-max max-w-lg">
+      <aside className="space-y-2 min-w-max max-w-lg mt-10 md:mt-0">
         <section>
           {/**Top */}
           <div className="bg-white dark:bg-[#1D2226] rounded-lg overflow-hidden relative flex flex-col items-center text-center border border-gray-300 dark:border-none">
