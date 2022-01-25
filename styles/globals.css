@@ -31,4 +31,5 @@
  .hideScrollbar::-webkit-scrollbar{
   @apply hidden  
   }
+  
 }

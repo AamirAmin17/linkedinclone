@@ -14,7 +14,7 @@ const HeaderLink = ({ Icon, text, avatar, feed, active, hidden }) => {
       } ${active && "!text-black dark:!text-white"}`}
     >
       {avatar ? (
-        <Icon className="!h-7 w-7 lg:!-mb-1" src={data?.user?.image} />
+        <Icon className="!h-7 w-7 lg:!-mb-1 " src={data?.user?.image} />
       ) : (
         <Icon />
       )}

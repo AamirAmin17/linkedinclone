@@ -19,6 +19,7 @@ import TimeAgo from "timeago-react";
 import useSWR, { mutate } from "swr";
 import { CircularProgress } from "@mui/material";
 const Post = ({ post, modalPost }) => {
+  console.log("post: ", post);
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
   const [modalType, setModalType] = useRecoilState(modalTypeState);

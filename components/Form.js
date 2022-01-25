@@ -22,26 +22,29 @@ const Form = () => {
     maxRows: 10,
   });
 
-  useEffect(async () => {
-    if (userInfo.file) {
-      const resizeFile = (file) =>
-        new Promise((resolve) => {
-          Resizer.imageFileResizer(
-            file,
-            800,
-            600,
-            "WEBP",
-            80,
-            0,
-            (uri) => {
-              resolve(uri);
-            },
-            "base64"
-          );
-        });
-      const image = await resizeFile(userInfo?.file);
-      setOptimzeImage(image);
-    }
+  useEffect(() => {
+    const optimizeImageFunction = async () => {
+      if (userInfo.file) {
+        const resizeFile = (file) =>
+          new Promise((resolve) => {
+            Resizer.imageFileResizer(
+              file,
+              800,
+              600,
+              "WEBP",
+              80,
+              0,
+              (uri) => {
+                resolve(uri);
+              },
+              "base64"
+            );
+          });
+        const image = await resizeFile(userInfo?.file);
+        setOptimzeImage(image);
+      }
+    };
+    optimizeImageFunction();
   }, [userInfo.file]);
 
   const fetcher = async (...args) => {

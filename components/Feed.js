@@ -35,7 +35,7 @@ const Feed = () => {
       {/**Input */}
       <Input />
       {data
-        ? data?.map((postObj) => <Post post={postObj} />)
+        ? data?.map((postObj) => <Post post={postObj} key={postObj.email} />)
         : fetchPostsFromRecoil.map((postObj) => <Post post={postObj} />)}
       {/**Posts */}
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import GroupIcon from "@mui/icons-material/Group";
@@ -11,7 +11,9 @@ import { Avatar } from "@mui/material";
 import HeaderLink from "./HeaderLink";
 import { useTheme } from "next-themes";
 import { motion } from "framer-motion";
-
+import dropDownScss from "./header.module.scss";
+import { signOut } from "next-auth/react";
+import { CircularProgress } from "@mui/material";
 const spring = {
   type: "spring",
   shiffness: 700,
@@ -21,6 +23,8 @@ const spring = {
 const Header = () => {
   const [mounted, setMounted] = React.useState(false);
   const { setTheme, resolvedTheme, theme } = useTheme();
+  const [spinner, setSpinner] = useState(false);
+  console.log("spinner: ", spinner);
 
   React.useEffect(() => {
     setMounted(true);
@@ -57,7 +61,26 @@ const Header = () => {
           <HeaderLink Icon={BusinessCenterIcon} text={"Jobs"} feed hidden />
           <HeaderLink Icon={ChatIcon} text={"Messaging"} feed />
           <HeaderLink Icon={NotificationsIcon} text={"Notifications"} feed />
-          <HeaderLink Icon={Avatar} text={"Me"} feed avatar />
+
+          <div className={dropDownScss.dropDown}>
+            <HeaderLink Icon={Avatar} text={"Me"} feed avatar />
+            <div className={`${dropDownScss.dropdownContent}`}>
+              <div
+                className={`${dropDownScss.signOut} md:top-4 top-5 `}
+                onClick={async () => {
+                  setSpinner((prev) => !prev);
+                  await signOut();
+                  setSpinner((prev) => !prev);
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  {spinner ? <CircularProgress /> : ""}
+                  <p className="whitespace-nowrap"> Sign out</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <HeaderLink Icon={AppsOutlinedIcon} text={"Work"} feed hidden />
 
           {/**Dark Mode toggle */}
