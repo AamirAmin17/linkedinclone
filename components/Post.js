@@ -35,13 +35,12 @@ const Post = ({ post, modalPost }) => {
       : string;
   };
   const deletePost = async () => {
-    setHandlePost((prev) => !prev);
     setSpinner((prev) => !prev);
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "applicaton/json" },
     });
-
+    setHandlePost((prev) => !prev);
     setModalOpen(false);
     setSpinner((prev) => !prev);
   };
