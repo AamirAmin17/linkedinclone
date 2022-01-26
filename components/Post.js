@@ -35,7 +35,7 @@ const Post = ({ post, modalPost }) => {
       : string;
   };
   const deletePost = async () => {
-    setHandlePost(!handlePost);
+    setHandlePost((prev) => !prev);
     setSpinner((prev) => !prev);
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
