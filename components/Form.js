@@ -80,7 +80,7 @@ const Form = () => {
       createdAt: new Date().toString(),
     };
 
-    await mutate("/api/posts", [...getData, postObject], false);
+    mutate("/api/posts", [...getData, postObject], false);
     const response = await axios.post("/api/posts", postObject, {
       onUploadProgress: (ProgressEvent) => {
         const progress = Math.round(
