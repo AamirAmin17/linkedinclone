@@ -34,15 +34,35 @@ const Post = ({ post, modalPost }) => {
       ? string.substr(0, characterLength - 1) + "...see more"
       : string;
   };
+
+  const fetcher = async (...args) => {
+    const response = await fetch(...args, {
+      method: "GET",
+      headers: {
+        "content-Type": "application/json",
+      },
+    });
+    const responseData = await response.json();
+    return responseData;
+  };
+  const { data: getData, error } = useSWR("/api/posts", fetcher);
+  console.log("getData: ", getData);
   const deletePost = async () => {
+    setSpinner((prev) => !prev);
+
+    mutate(
+      "/api/posts",
+      getData.filter((data) => data._id !== post._id),
+      false
+    );
     setSpinner((prev) => !prev);
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
       headers: { "Content-Type": "applicaton/json" },
     });
+    mutate("/api/posts");
     setHandlePost((prev) => !prev);
     setModalOpen(false);
-    setSpinner((prev) => !prev);
   };
   return (
     <div

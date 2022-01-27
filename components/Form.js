@@ -1,7 +1,7 @@
 import { PhotoSizeSelectActual } from "@mui/icons-material";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import useSWR, { mutate, trigger } from "swr";
 import { modalState } from "../atoms/modalAtom";
 import FileBase64 from "react-file-base64";
@@ -12,9 +12,9 @@ const Form = () => {
   const [photoUrl, setPhotoUrl] = useState("");
   const [userInfo, setUserInfo] = useState([]);
   const [spinner, setSpinner] = useState(false);
-
+  const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [optimzeImage, setOptimzeImage] = useState();
-
+  const ref = React.useRef();
   const [state, setState] = useState({
     value: "",
     rows: 2,
@@ -24,6 +24,9 @@ const Form = () => {
 
   useEffect(() => {
     const optimizeImageFunction = async () => {
+      if (modalOpen) {
+        ref.current.focus();
+      }
       if (userInfo.file) {
         const resizeFile = (file) =>
           new Promise((resolve) => {
@@ -41,11 +44,12 @@ const Form = () => {
             );
           });
         const image = await resizeFile(userInfo?.file);
+        console.log("image: ", image);
         setOptimzeImage(image);
       }
     };
     optimizeImageFunction();
-  }, [userInfo.file]);
+  }, [userInfo.file, modalOpen]);
 
   const fetcher = async (...args) => {
     const response = await fetch(...args, {
@@ -61,14 +65,17 @@ const Form = () => {
   const handleImage = (event) => {
     setUserInfo({ ...userInfo, file: event.target.files[0] });
   };
+  const submitOnEnter = (e) => {
+    if (!state.value.trim() && !photoUrl.trim()) return;
+    if (e.code === "Enter") return uploadPost();
+  };
   //compress image file on runtime (WEBP).
 
   const { data: getData, error } = useSWR("/api/posts", fetcher);
 
-  const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const { data } = useSession();
   const uploadPost = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setSpinner((prev) => !prev);
     // const image = await resizeFile(userInfo?.file);
     const postObject = {
@@ -133,6 +140,8 @@ const Form = () => {
           value={state.value}
           onChange={handleChange}
           rows={state.rows}
+          ref={ref}
+          onKeyDown={submitOnEnter}
         />
       </div>
       <div className="flex items-center justify-between space-x-4">
@@ -164,7 +173,7 @@ const Form = () => {
           <button
             className="font-medium bg-blue-400 hover:bg-blue-500 disabled:text-black/40 disabled:bg-white/75 disabled:cursor-not-allowed text-white rounded-full px-3.5 py-1"
             disabled={!state.value.trim() && !photoUrl.trim()}
-            type="submit"
+            // type="submit"
             onClick={uploadPost}
           >
             Post
