@@ -77,7 +77,7 @@ const Form = () => {
   const uploadPost = async (e) => {
     // e.preventDefault();
     setSpinner((prev) => !prev);
-    // const image = await resizeFile(userInfo?.file);
+
     const postObject = {
       input: state.value,
       photoUrl: optimzeImage,
@@ -89,12 +89,12 @@ const Form = () => {
 
     mutate("/api/posts", [...getData, postObject], false);
     const response = await axios.post("/api/posts", postObject, {
-      onUploadProgress: (ProgressEvent) => {
-        const progress = Math.round(
-          (ProgressEvent.loaded / ProgressEvent.total) * 100
-        );
-        console.log("progress: ", progress);
-      },
+      // onUploadProgress: (ProgressEvent) => {
+      //   const progress = Math.round(
+      //     (ProgressEvent.loaded / ProgressEvent.total) * 100
+      //   );
+      //   console.log("progress: ", progress);
+      // },
     });
     // const responseData = await response.json();
     mutate("/api/posts");
