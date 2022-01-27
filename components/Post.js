@@ -19,7 +19,6 @@ import TimeAgo from "timeago-react";
 import useSWR, { mutate } from "swr";
 import { CircularProgress } from "@mui/material";
 const Post = ({ post, modalPost }) => {
-  console.log("post: ", post);
   const [modalOpen, setModalOpen] = useRecoilState(modalState);
   const [showInput, setShowInput] = useState(false);
   const [modalType, setModalType] = useRecoilState(modalTypeState);
@@ -46,7 +45,7 @@ const Post = ({ post, modalPost }) => {
     return responseData;
   };
   const { data: getData, error } = useSWR("/api/posts", fetcher);
-  console.log("getData: ", getData);
+
   const deletePost = async () => {
     setSpinner((prev) => !prev);
 
@@ -61,7 +60,7 @@ const Post = ({ post, modalPost }) => {
       headers: { "Content-Type": "applicaton/json" },
     });
     mutate("/api/posts");
-    setHandlePost((prev) => !prev);
+    // setHandlePost((prev) => !prev);
     setModalOpen(false);
   };
   return (

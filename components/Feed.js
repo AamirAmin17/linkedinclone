@@ -22,10 +22,10 @@ const Feed = () => {
     const responseData = await response.json();
     return responseData;
   };
-  useEffect(() => {
-    mutate("/api/posts");
-  }, [handlePost]);
   const { data, error } = useSWR("/api/posts", fetcher);
+  // useEffect(() => {
+  //   mutate("/api/posts");
+  // }, [handlePost]);
 
   //   if (error) return "An error has occurred.";
   //   if (!data) return "Loading...";

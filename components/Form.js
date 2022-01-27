@@ -132,7 +132,7 @@ const Form = () => {
   };
 
   return (
-    <form className="flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3">
+    <div className="flex flex-col relative space-y-2 text-black/80 dark:text-white/75 px-4 pb-3">
       <div>
         <textarea
           placeholder="What do you want to talk about?"
@@ -180,7 +180,7 @@ const Form = () => {
           </button>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
