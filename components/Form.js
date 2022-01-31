@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import useSWR, { mutate, trigger } from "swr";
 import { modalState } from "../atoms/modalAtom";
-import FileBase64 from "react-file-base64";
+
 import Resizer from "react-image-file-resizer";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
